@@ -6,33 +6,35 @@
   font-family: "Poppins", "Courier New", Courier, monospace;
 }
 .container {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+  margin: 5rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 3rem;
+  justify-items: center;
 }
 .countries {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  display: grid;
+  /* grid-template-rows: 1fr 0.5fr 0.5fr; */
+  grid-template-rows: 180px 120px 140px;
   background-color: aqua;
   border-radius: 0.5rem;
-  height: 29rem;
   width: 20rem;
-  position: relative;
-  margin: 2rem;
 }
-.flag {
+img{
   border-radius: 0.5rem 0.5rem 0 0;
-  position: absolute;
-  top: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
 .name {
-  margin-top: 5rem;
+  margin-top: 2rem;
   font-weight: 500;
 }
 .region {
   font-weight: 300;
-  margin-left: 2rem;
+}
+
+.corrency{
+  margin-bottom: 2rem;
 }

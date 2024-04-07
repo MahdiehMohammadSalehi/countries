@@ -13,15 +13,17 @@ const countries = function (country) {
     const money = Object.values(data.currencies);
 
     console.log(data);
-    const html = ` <div class="countries">
-  <img class="flag" src=${data.flags.png} alt="" />
+    const html = ` <div class="countries">   
+  <img  src=${data.flags.png} alt="" />
   <ul>
     <li class="name"> ${data.altSpellings[1]}</li>
     <li class="region">${data.region}</li>
-    <li class="population">🧑‍🤝‍🧑${(+data.population / 1000000).toFixed(
+    </ul>
+    <ul>
+    <li class="population">🧑‍🤝‍🧑 ${(+data.population / 1000000).toFixed(
       1
     )}M people</li>
-    <li class="region">🗣️ ${lang}</li>
+    <li class="lang">🗣️ ${lang}</li>
     <li class="corrency">💰 ${money[0].name}</li>
   </ul>
 </div>`;
@@ -32,3 +34,4 @@ const countries = function (country) {
 countries("iran");
 countries("usa");
 countries("korea");
+countries("Algeria");
