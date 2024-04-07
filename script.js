@@ -1,22 +1,14 @@
 "use strict";
 const container = document.querySelector(".container");
 
-const countries = function (country) {
-  const request = new XMLHttpRequest();
-  request.open("GET", `https://restcountries.com/v3.1/name/${country}`);
-  request.send();
+const renderCountryData = function (data, className = "") {
+  const lang = Object.values(data.languages);
+  const money = Object.values(data.currencies);
 
-  request.addEventListener("load", function () {
-    let data = JSON.parse(this.responseText);
-    data = data[0];
-    const lang = Object.values(data.languages);
-    const money = Object.values(data.currencies);
-
-    console.log(data);
-    const html = ` <div class="countries">   
+  const html = ` <div class="countries ${className}">   
   <img  src=${data.flags.png} alt="" />
   <ul>
-    <li class="name"> ${data.altSpellings[1]}</li>
+    <li class="name"> ${data.name["common"]}</li>
     <li class="region">${data.region}</li>
     </ul>
     <ul>
@@ -27,11 +19,35 @@ const countries = function (country) {
     <li class="corrency">💰 ${money[0].name}</li>
   </ul>
 </div>`;
-    container.insertAdjacentHTML("beforeend", html);
-  });
+  container.insertAdjacentHTML("beforeend", html);
 };
 
-countries("iran");
-countries("usa");
-countries("korea");
-countries("Algeria");
+// const countries = function (country) {
+//   const request = new XMLHttpRequest();
+//   request.open("GET", `https://restcountries.com/v3.1/name/${country}`);
+//   request.send();
+
+//   request.addEventListener("load", function () {
+//     let data = JSON.parse(this.responseText);
+//     data = data[0];
+//     renderCountryData(data);
+//   });
+// };
+
+const getCountryData = function (country) {
+  fetch(`https://restcountries.com/v3.1/name/${country}`)
+    .then((response) => response.json())
+    .then((data) => {
+      renderCountryData(data[0]);
+      const neighbours = data[0].borders?.[0];
+      return fetch(`https://restcountries.com/v3.1/alpha/${neighbours}`);
+    })
+    .then((response) => response.json())
+    .then((data) => renderCountryData(data[0], "neighbour"));
+};
+
+getCountryData("canada");
+// getCountryData("portugal");
+// getCountryData("usa");
+// getCountryData("korea");
+// getCountryData("Algeria");
