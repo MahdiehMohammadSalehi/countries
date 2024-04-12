@@ -1,5 +1,18 @@
 "use strict";
+// const countries = function (country) {
+//   const request = new XMLHttpRequest();
+//   request.open("GET", `https://restcountries.com/v3.1/name/${country}`);
+//   request.send();
+
+//   request.addEventListener("load", function () {
+//     let data = JSON.parse(this.responseText);
+//     data = data[0];
+//     renderCountryData(data);
+//   });
+// };
+
 const container = document.querySelector(".container");
+const btn = document.querySelector(".btn");
 
 const renderCountryData = function (data, className = "") {
   const lang = Object.values(data.languages);
@@ -22,32 +35,32 @@ const renderCountryData = function (data, className = "") {
   container.insertAdjacentHTML("beforeend", html);
 };
 
-// const countries = function (country) {
-//   const request = new XMLHttpRequest();
-//   request.open("GET", `https://restcountries.com/v3.1/name/${country}`);
-//   request.send();
+const handleError = function (err) {
+  container.insertAdjacentText(
+    "beforeend",
+    `something went wrong. 💣${err.message}`
+  );
+};
 
-//   request.addEventListener("load", function () {
-//     let data = JSON.parse(this.responseText);
-//     data = data[0];
-//     renderCountryData(data);
-//   });
-// };
-
+const getJSON = function (url, msg) {
+  return fetch(url).then((response) => {
+    if (!response.ok) throw new Error(`${msg}, (${response.status})`);
+    return response.json();
+  });
+};
 const getCountryData = function (country) {
-  fetch(`https://restcountries.com/v3.1/name/${country}`)
-    .then((response) => response.json())
+  getJSON(`https://restcountries.com/v3.1/name/${country}`, "country not found")
     .then((data) => {
       renderCountryData(data[0]);
       const neighbours = data[0].borders?.[0];
-      return fetch(`https://restcountries.com/v3.1/alpha/${neighbours}`);
+      if (!neighbours) throw new Error("no neighbours found!");
+      return getJSON(
+        `https://restcountries.com/v3.1/alpha/${neighbours}`,
+        "country not found"
+      );
     })
-    .then((response) => response.json())
-    .then((data) => renderCountryData(data[0], "neighbour"));
+    .then((data) => renderCountryData(data[0], "neighbour"))
+    .catch((err) => handleError(err));
 };
 
-getCountryData("canada");
-// getCountryData("portugal");
-// getCountryData("usa");
-// getCountryData("korea");
-// getCountryData("Algeria");
+btn.addEventListener("click", getCountryData.bind(this, "iran"));
